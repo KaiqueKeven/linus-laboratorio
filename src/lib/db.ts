@@ -1,26 +1,50 @@
-import { createClient } from '@libsql/client';
 import bcrypt from 'bcryptjs';
 import path from 'path';
 import { supabase, isSupabaseConfigured } from './supabase';
 
-const dbPath = path.resolve(process.cwd(), 'linus_data.db');
+let _localDb: any = null;
 
-export const localDb = createClient({
-  url: `file:${dbPath}`,
-});
+// Lazy initialization of local SQLite so it NEVER crashes in Vercel / AWS Lambda read-only environments
+export function getLocalDb() {
+  if (isSupabaseConfigured) {
+    return null;
+  }
+  if (!_localDb) {
+    try {
+      const { createClient } = require('@libsql/client');
+      // On serverless, only /tmp is writable; locally process.cwd() is used
+      const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+      const dbPath = isServerless
+        ? path.resolve('/tmp', 'linus_data.db')
+        : path.resolve(process.cwd(), 'linus_data.db');
+
+      _localDb = createClient({
+        url: `file:${dbPath}`,
+      });
+    } catch (err) {
+      console.warn('Local SQLite not available:', err);
+    }
+  }
+  return _localDb;
+}
 
 let isInitialized = false;
 
 export async function ensureDbInitialized() {
   if (isInitialized) return;
 
-  // If Supabase is configured (Production / Cloud), we rely on Supabase PostgreSQL!
+  // In production with Supabase, we rely 100% on cloud PostgreSQL!
   if (isSupabaseConfigured) {
     isInitialized = true;
     return;
   }
 
-  // Fallback: Initialize Local SQLite table structure for local dev without Supabase keys
+  const localDb = getLocalDb();
+  if (!localDb) {
+    isInitialized = true;
+    return;
+  }
+
   try {
     await localDb.execute(`
       CREATE TABLE IF NOT EXISTS users (
@@ -41,21 +65,21 @@ export async function ensureDbInitialized() {
         user_id TEXT NOT NULL,
         name TEXT NOT NULL,
         cpf TEXT NOT NULL,
-        rg TEXT,
-        birth_date TEXT,
-        gender TEXT,
-        phone TEXT NOT NULL,
-        email TEXT,
-        zip_code TEXT,
-        address TEXT,
-        city TEXT,
-        state TEXT,
+        doctor_request TEXT NOT NULL,
+        rg TEXT DEFAULT '',
+        birth_date TEXT DEFAULT '',
+        gender TEXT DEFAULT 'Não informado',
+        phone TEXT DEFAULT '',
+        email TEXT DEFAULT '',
+        zip_code TEXT DEFAULT '',
+        address TEXT DEFAULT '',
+        city TEXT DEFAULT 'Belo Horizonte',
+        state TEXT DEFAULT 'MG',
         payment_type TEXT NOT NULL DEFAULT 'Particular',
-        health_insurance_name TEXT,
-        insurance_card_number TEXT,
-        requested_exams TEXT NOT NULL,
-        doctor_request TEXT,
-        clinical_notes TEXT,
+        health_insurance_name TEXT DEFAULT '',
+        insurance_card_number TEXT DEFAULT '',
+        requested_exams TEXT DEFAULT 'Atendimento Clínico',
+        clinical_notes TEXT DEFAULT '',
         status TEXT NOT NULL DEFAULT 'Aguardando Atendimento',
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
@@ -71,17 +95,12 @@ export async function ensureDbInitialized() {
       const isoNow = now.toISOString();
       const defaultPasswordHash = bcrypt.hashSync('1234', 10);
 
-      const adminId = 'usr_adm_01';
-      const func1Id = 'usr_func_01';
-      const func2Id = 'usr_func_02';
-      const func3Id = 'usr_func_03';
-
       await localDb.batch([
         {
           sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            adminId,
+            'usr_adm_01',
             'admin',
             'Dr. Roberto Linus',
             defaultPasswordHash,
@@ -95,7 +114,7 @@ export async function ensureDbInitialized() {
           sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            func1Id,
+            'usr_func_01',
             'mariana',
             'Mariana Souza',
             defaultPasswordHash,
@@ -109,7 +128,7 @@ export async function ensureDbInitialized() {
           sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            func2Id,
+            'usr_func_02',
             'carlos',
             'Carlos Eduardo Lima',
             defaultPasswordHash,
@@ -123,7 +142,7 @@ export async function ensureDbInitialized() {
           sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            func3Id,
+            'usr_func_03',
             'ana',
             'Ana Beatriz Faria',
             defaultPasswordHash,
@@ -163,6 +182,9 @@ export const db = {
       return data || null;
     }
 
+    const localDb = getLocalDb();
+    if (!localDb) return null;
+
     const res = await localDb.execute({
       sql: 'SELECT * FROM users WHERE LOWER(username) = ?',
       args: [cleanUsername],
@@ -184,6 +206,9 @@ export const db = {
       }
       return data || null;
     }
+
+    const localDb = getLocalDb();
+    if (!localDb) return null;
 
     const res = await localDb.execute({
       sql: 'SELECT id, username, name, role, department, active FROM users WHERE id = ?',
@@ -207,6 +232,9 @@ export const db = {
       }
       return data || [];
     }
+
+    const localDb = getLocalDb();
+    if (!localDb) return [];
 
     const res = await localDb.execute(`
       SELECT id, username, name, role, department, active, created_at
@@ -240,6 +268,9 @@ export const db = {
       }
       return data;
     }
+
+    const localDb = getLocalDb();
+    if (!localDb) throw new Error('Database not initialized');
 
     await localDb.execute({
       sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
@@ -275,6 +306,9 @@ export const db = {
       }
       return;
     }
+
+    const localDb = getLocalDb();
+    if (!localDb) return;
 
     const fields = Object.keys(updates);
     if (fields.length === 0) return;
@@ -342,7 +376,9 @@ export const db = {
       }));
     }
 
-    // Local SQLite fallback
+    const localDb = getLocalDb();
+    if (!localDb) return [];
+
     let sql = `
       SELECT 
         c.*,
@@ -360,14 +396,9 @@ export const db = {
     }
 
     if (filters.search) {
-      sql += ` AND (c.name LIKE ? OR c.cpf LIKE ? OR c.phone LIKE ? OR c.requested_exams LIKE ? OR c.doctor_request LIKE ?)`;
+      sql += ` AND (c.name LIKE ? OR c.cpf LIKE ? OR c.doctor_request LIKE ?)`;
       const term = `%${filters.search}%`;
-      args.push(term, term, term, term, term);
-    }
-
-    if (filters.status && filters.status !== 'Todos') {
-      sql += ` AND c.status = ?`;
-      args.push(filters.status);
+      args.push(term, term, term);
     }
 
     if (filters.period === 'today') {
@@ -413,6 +444,9 @@ export const db = {
       };
     }
 
+    const localDb = getLocalDb();
+    if (!localDb) return null;
+
     const res = await localDb.execute({
       sql: `
         SELECT c.*, u.name as user_name, u.username as user_username
@@ -446,6 +480,9 @@ export const db = {
         user_username: (data as any).users?.username || '',
       };
     }
+
+    const localDb = getLocalDb();
+    if (!localDb) throw new Error('Database not initialized');
 
     await localDb.execute({
       sql: `
@@ -510,6 +547,9 @@ export const db = {
       };
     }
 
+    const localDb = getLocalDb();
+    if (!localDb) return null;
+
     const current = await this.getClientById(id);
     if (!current) return null;
 
@@ -545,6 +585,9 @@ export const db = {
       }
       return;
     }
+
+    const localDb = getLocalDb();
+    if (!localDb) return;
 
     await localDb.execute({
       sql: 'DELETE FROM clients WHERE id = ?',
@@ -661,7 +704,20 @@ export const db = {
       };
     }
 
-    // Local SQLite fallback
+    const localDb = getLocalDb();
+    if (!localDb) {
+      return {
+        totalClients: 0,
+        todayClients: 0,
+        weekClients: 0,
+        monthClients: 0,
+        clientsPerDay: [],
+        clientsPerEmployee: [],
+        paymentDistribution: [],
+        statusDistribution: [],
+      };
+    }
+
     const userClause = (isEmployee && userId) ? 'WHERE user_id = ?' : '';
     const userArgs: string[] = (isEmployee && userId) ? [userId] : [];
 
@@ -720,7 +776,7 @@ export const db = {
       `);
 
       clientsPerEmployee = await Promise.all(
-        empRes.rows.map(async (emp) => {
+        empRes.rows.map(async (emp: any) => {
           const empTotal = await localDb.execute({
             sql: 'SELECT COUNT(*) as count FROM clients WHERE user_id = ?',
             args: [emp.id],
@@ -784,6 +840,11 @@ export const db = {
         week_clients: wRes.count || 0,
         month_clients: mRes.count || 0,
       };
+    }
+
+    const localDb = getLocalDb();
+    if (!localDb) {
+      return { total_clients: 0, week_clients: 0, month_clients: 0 };
     }
 
     const totalRes = await localDb.execute({
