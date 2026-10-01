@@ -30,8 +30,15 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# local database
+*.db
+*.sqlite
+linus_data.db
+
 # env files (can opt-in for committing if needed)
-.env*
+.env*.local
+.env
+!.env.local.example
 
 # vercel
 .vercel
