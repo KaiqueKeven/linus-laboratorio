@@ -95,7 +95,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
                   autoFocus
                   value={username}
                   onChange={(e) => setUsername(e.target.value.toLowerCase())}
-                  placeholder="Ex: admin ou mariana"
+                  placeholder="Ex: admin, kaique ou joao"
                   className="block w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:bg-white transition-all lowercase"
                 />
               </div>
@@ -136,10 +136,10 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
             </button>
           </form>
 
-          {/* Quick Demo Helper */}
+          {/* Quick Access Helper */}
           <div className="mt-6 pt-5 border-t border-slate-200">
             <p className="text-xs font-semibold text-slate-500 text-center uppercase tracking-wider mb-2.5">
-              Clique para Entrar Rápido (Demonstração):
+              Acesso Rápido para a Equipe:
             </p>
             <div className="grid grid-cols-1 gap-2">
               <button
@@ -159,32 +159,32 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 
               <button
                 type="button"
-                onClick={() => fillQuick('mariana', '1234')}
+                onClick={() => fillQuick('kaique', '1234')}
                 className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-teal-900 bg-teal-50 hover:bg-teal-100 rounded-lg border border-teal-200 transition-colors text-left"
               >
                 <div className="flex items-center gap-2">
                   <UserCheck className="w-4 h-4 text-teal-600 shrink-0" />
                   <div>
-                    <span className="font-bold">Mariana Souza (Recepção)</span>
-                    <span className="text-[11px] text-teal-600 block">Usuário: <strong>mariana</strong> | Senha: <strong>1234</strong></span>
+                    <span className="font-bold">Kaique Keven (Funcionário)</span>
+                    <span className="text-[11px] text-teal-600 block">Usuário: <strong>kaique</strong> | Senha: <strong>1234</strong></span>
                   </div>
                 </div>
-                <span className="text-[10px] bg-teal-200/80 px-2 py-0.5 rounded font-mono font-bold">Recepção</span>
+                <span className="text-[10px] bg-teal-200/80 px-2 py-0.5 rounded font-mono font-bold">Atendimento</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => fillQuick('carlos', '1234')}
-                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition-colors text-left"
+                onClick={() => fillQuick('joao', '1234')}
+                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors text-left"
               >
                 <div className="flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-slate-600 shrink-0" />
+                  <UserCheck className="w-4 h-4 text-blue-600 shrink-0" />
                   <div>
-                    <span className="font-bold">Carlos Eduardo (Atendimento)</span>
-                    <span className="text-[11px] text-slate-600 block">Usuário: <strong>carlos</strong> | Senha: <strong>1234</strong></span>
+                    <span className="font-bold">João Gustavo (Funcionário)</span>
+                    <span className="text-[11px] text-blue-600 block">Usuário: <strong>joao</strong> | Senha: <strong>1234</strong></span>
                   </div>
                 </div>
-                <span className="text-[10px] bg-slate-300 px-2 py-0.5 rounded font-mono font-bold">Atendimento</span>
+                <span className="text-[10px] bg-blue-200/80 px-2 py-0.5 rounded font-mono font-bold">Atendimento</span>
               </button>
             </div>
           </div>

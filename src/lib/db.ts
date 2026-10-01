@@ -114,12 +114,12 @@ export async function ensureDbInitialized() {
           sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            'usr_func_01',
-            'mariana',
-            'Mariana Souza',
+            'usr_func_kaique',
+            'kaique',
+            'Kaique Keven',
             defaultPasswordHash,
             'FUNCIONARIO',
-            'Recepção e Coleta',
+            'Recepção e Atendimento',
             1,
             isoNow,
           ],
@@ -128,26 +128,12 @@ export async function ensureDbInitialized() {
           sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            'usr_func_02',
-            'carlos',
-            'Carlos Eduardo Lima',
+            'usr_func_joao',
+            'joao',
+            'João Gustavo',
             defaultPasswordHash,
             'FUNCIONARIO',
-            'Atendimento ao Paciente',
-            1,
-            isoNow,
-          ],
-        },
-        {
-          sql: `INSERT INTO users (id, username, name, password_hash, role, department, active, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [
-            'usr_func_03',
-            'ana',
-            'Ana Beatriz Faria',
-            defaultPasswordHash,
-            'FUNCIONARIO',
-            'Triagem e Exames',
+            'Recepção e Atendimento',
             1,
             isoNow,
           ],
