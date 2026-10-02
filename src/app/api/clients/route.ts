@@ -98,7 +98,7 @@ export async function POST(request: Request) {
       address: '',
       city: 'Belo Horizonte',
       state: 'MG',
-      payment_type: data.payment_type || 'Particular',
+      payment_type: (data.payment_type === 'Convênio' || data.payment_type === 'Convenio') ? 'Convênio' : 'Particular',
       health_insurance_name: data.health_insurance_name || '',
       insurance_card_number: '',
       requested_exams: data.requested_exams || 'Atendimento / Encaminhamento Clínico',

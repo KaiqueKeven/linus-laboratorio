@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Client, User } from '@/lib/types';
+import { Client, User, PaymentType } from '@/lib/types';
 import { formatDateBr, formatDateTimeBr } from '@/lib/date-utils';
 import {
   X,
@@ -39,6 +39,7 @@ export function ClientDetailModal({
 
   const [name, setName] = useState(client.name);
   const [doctorRequest, setDoctorRequest] = useState(client.doctor_request || '');
+  const [paymentType, setPaymentType] = useState<PaymentType>(client.payment_type || 'Particular');
 
   const canEdit = currentUser.role === 'ADM' || client.user_id === currentUser.id;
 
@@ -61,6 +62,7 @@ export function ClientDetailModal({
         body: JSON.stringify({
           name: name.trim(),
           doctor_request: doctorRequest.trim(),
+          payment_type: paymentType,
         }),
       });
 
@@ -198,6 +200,52 @@ export function ClientDetailModal({
               <p className="text-sm font-bold text-slate-900 pt-0.5">
                 {client.doctor_request || 'Não informado'}
               </p>
+            )}
+          </div>
+
+          {/* Tipo de Atendimento (Particular ou Convênio) */}
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+              <CreditCard className="w-3.5 h-3.5 text-orange-600" />
+              Tipo de Atendimento
+            </span>
+            {isEditing ? (
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setPaymentType('Particular')}
+                  className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                    paymentType === 'Particular'
+                      ? 'border-[#ed8431] bg-orange-100 text-orange-950 ring-2 ring-[#ed8431]/20'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  Particular
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentType('Convênio')}
+                  className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                    paymentType === 'Convênio'
+                      ? 'border-[#20418f] bg-blue-100 text-blue-950 ring-2 ring-[#20418f]/20'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  Convênio
+                </button>
+              </div>
+            ) : (
+              <div>
+                <span
+                  className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-xl border ${
+                    client.payment_type === 'Convênio'
+                      ? 'bg-blue-50 text-blue-800 border-blue-200'
+                      : 'bg-orange-50 text-orange-800 border-orange-200'
+                  }`}
+                >
+                  {client.payment_type || 'Particular'}
+                </span>
+              </div>
             )}
           </div>
 

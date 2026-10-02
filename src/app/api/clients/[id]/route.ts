@@ -51,7 +51,12 @@ export async function PUT(
       return NextResponse.json({ error: 'Permissão negada para alterar este cliente.' }, { status: 403 });
     }
 
-    const updated = await db.updateClient(id, data);
+    const payload = { ...data };
+    if (payload.payment_type) {
+      payload.payment_type = (payload.payment_type === 'Convênio' || payload.payment_type === 'Convenio') ? 'Convênio' : 'Particular';
+    }
+
+    const updated = await db.updateClient(id, payload);
     return NextResponse.json({ success: true, client: updated });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

@@ -207,9 +207,18 @@ export function ClientList({
                     <h3 className="text-sm font-bold text-slate-900 leading-tight">
                       {client.name}
                     </h3>
-                    <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="flex items-center gap-1.5 mt-1">
                       <span className="font-mono text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
                         {client.cpf}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border ${
+                          client.payment_type === 'Convênio'
+                            ? 'bg-blue-50 text-blue-700 border-blue-200'
+                            : 'bg-orange-50 text-orange-700 border-orange-200'
+                        }`}
+                      >
+                        {client.payment_type || 'Particular'}
                       </span>
                     </div>
                   </div>

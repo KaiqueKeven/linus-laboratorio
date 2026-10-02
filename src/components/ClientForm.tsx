@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { User, Client } from '@/lib/types';
+import { User, Client, PaymentType } from '@/lib/types';
 import { formatCPF, cleanCPF, validateCPF } from '@/lib/cpf-utils';
 import {
   User as UserIcon,
@@ -13,7 +13,8 @@ import {
   ArrowRight,
   ShieldCheck,
   Check,
-  XCircle
+  XCircle,
+  CreditCard
 } from 'lucide-react';
 
 interface ClientFormProps {
@@ -27,6 +28,7 @@ export function ClientForm({ currentUser, employeesList = [], onSuccess, onCance
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
   const [doctorRequest, setDoctorRequest] = useState('');
+  const [paymentType, setPaymentType] = useState<PaymentType>('Particular');
   const [targetUserId, setTargetUserId] = useState(currentUser.id);
 
   const [loading, setLoading] = useState(false);
@@ -95,6 +97,7 @@ export function ClientForm({ currentUser, employeesList = [], onSuccess, onCance
           name: name.trim(),
           cpf: cpf.trim(),
           doctor_request: doctorRequest.trim(),
+          payment_type: paymentType,
           user_id: targetUserId,
         }),
       });
@@ -294,8 +297,61 @@ export function ClientForm({ currentUser, employeesList = [], onSuccess, onCance
                   setDoctorRequest(e.target.value);
                   setError(null);
                 }}
-                className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all placeholder:text-slate-400"
+                className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all placeholder:text-slate-400"
               />
+            </div>
+          </div>
+
+          {/* 4. Tipo de Atendimento (Particular ou Convênio) */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <CreditCard className="w-3.5 h-3.5 text-orange-600" />
+                4. Tipo de Atendimento *
+              </span>
+              <span className="text-[11px] font-semibold text-slate-400">
+                (Apenas 2 opções)
+              </span>
+            </label>
+
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => setPaymentType('Particular')}
+                className={`py-3.5 px-4 rounded-2xl border-2 text-sm font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+                  paymentType === 'Particular'
+                    ? 'border-[#ed8431] bg-orange-50 text-orange-950 shadow-sm shadow-orange-500/10 ring-2 ring-[#ed8431]/20'
+                    : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 hover:border-slate-300'
+                }`}
+              >
+                <span
+                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    paymentType === 'Particular' ? 'border-[#ed8431] bg-[#ed8431]' : 'border-slate-400'
+                  }`}
+                >
+                  {paymentType === 'Particular' && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                </span>
+                <span>Particular</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentType('Convênio')}
+                className={`py-3.5 px-4 rounded-2xl border-2 text-sm font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+                  paymentType === 'Convênio'
+                    ? 'border-[#20418f] bg-blue-50 text-blue-950 shadow-sm shadow-blue-500/10 ring-2 ring-[#20418f]/20'
+                    : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 hover:border-slate-300'
+                }`}
+              >
+                <span
+                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    paymentType === 'Convênio' ? 'border-[#20418f] bg-[#20418f]' : 'border-slate-400'
+                  }`}
+                >
+                  {paymentType === 'Convênio' && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                </span>
+                <span>Convênio</span>
+              </button>
             </div>
           </div>
 
@@ -304,7 +360,7 @@ export function ClientForm({ currentUser, employeesList = [], onSuccess, onCance
             <button
               type="submit"
               disabled={loading || (cpfDigits.length === 11 && !cpfValidation?.isValid)}
-              className="w-full py-4 px-4 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 active:scale-[0.99] shadow-lg shadow-cyan-600/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-4 px-4 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-[#ed8431] to-[#d96a19] hover:from-[#f08c3d] hover:to-[#c85e10] active:scale-[0.99] shadow-lg shadow-orange-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
