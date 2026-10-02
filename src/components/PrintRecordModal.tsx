@@ -62,7 +62,7 @@ export function PrintRecordModal({ client, onClose }: PrintRecordModalProps) {
                   Laboratórios de Análises Clínicas
                 </p>
                 <p className="text-[10px] text-slate-400">
-                  CNPJ: 12.345.678/0001-90 • Resp. Técnico: Dr. Roberto Linus CRBM 1234
+                  Unidade Matriz • Laboratório Linus Pauling
                 </p>
               </div>
             </div>

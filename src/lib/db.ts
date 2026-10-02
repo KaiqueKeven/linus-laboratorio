@@ -102,7 +102,7 @@ export async function ensureDbInitialized() {
           args: [
             'usr_adm_01',
             'admin',
-            'Dr. Roberto Linus',
+            'Administrador',
             defaultPasswordHash,
             'ADM',
             'Diretoria Geral',

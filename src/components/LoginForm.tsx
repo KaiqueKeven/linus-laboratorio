@@ -158,7 +158,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0" />
                   <div>
-                    <span className="font-bold">Dr. Roberto (ADM)</span>
+                    <span className="font-bold">Administrador (ADM)</span>
                     <span className="text-[11px] text-purple-600 block">Usuário: <strong>admin</strong> | Senha: <strong>1234</strong></span>
                   </div>
                 </div>
