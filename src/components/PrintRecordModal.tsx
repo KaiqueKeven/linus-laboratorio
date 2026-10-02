@@ -46,15 +46,20 @@ export function PrintRecordModal({ client, onClose }: PrintRecordModalProps) {
           {/* Header */}
           <div className="border-b-2 border-slate-800 pb-4 flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-slate-900 text-cyan-400 flex items-center justify-center">
-                <Activity className="w-7 h-7" />
+              <div className="w-12 h-12 rounded-xl bg-[#ed8431] overflow-hidden p-1 flex items-center justify-center shrink-0 shadow-xs">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/linus-mark.png"
+                  alt="Laboratório Linus Pauling"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
-                <h1 className="text-xl font-black tracking-tight text-slate-900">
-                  LABORATÓRIO LINUS
+                <h1 className="text-xl font-black tracking-tight text-[#20418f]">
+                  LINUS PAULING
                 </h1>
-                <p className="text-[11px] text-slate-500 font-medium">
-                  Análises Clínicas, Diagnósticos & Biologia Molecular
+                <p className="text-[11px] text-slate-700 font-semibold">
+                  Laboratórios de Análises Clínicas
                 </p>
                 <p className="text-[10px] text-slate-400">
                   CNPJ: 12.345.678/0001-90 • Resp. Técnico: Dr. Roberto Linus CRBM 1234

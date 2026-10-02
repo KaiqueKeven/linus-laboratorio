@@ -11,6 +11,7 @@ import { PrintRecordModal } from '@/components/PrintRecordModal';
 import { AdminMetricsView } from '@/components/AdminMetricsView';
 import { EmployeeMetricsView } from '@/components/EmployeeMetricsView';
 import { EmployeesManagement } from '@/components/EmployeesManagement';
+import { InstallAppBanner } from '@/components/InstallAppBanner';
 import {
   Activity,
   Users,
@@ -118,24 +119,28 @@ export default function Home() {
 
   if (initialLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white px-4">
-        <div className="w-14 h-14 rounded-3xl bg-gradient-to-tr from-cyan-600 to-teal-500 flex items-center justify-center text-white mb-4 shadow-xl shadow-cyan-500/20 animate-pulse">
-          <Activity className="w-8 h-8 stroke-[2.5]" />
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-white px-4">
+        <div className="w-16 h-16 rounded-2xl bg-[#ed8431] overflow-hidden p-2 mb-4 shadow-2xl shadow-orange-500/30 flex items-center justify-center animate-pulse">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/linus-mark.png" alt="Linus Pauling" className="w-full h-full object-contain" />
         </div>
-        <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-2" />
-        <span className="text-xs text-slate-400 font-medium">Carregando Laboratório LINUS...</span>
+        <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-2" />
+        <span className="text-xs text-orange-200/80 font-medium">Carregando Linus Pauling...</span>
       </div>
     );
   }
 
   if (!currentUser) {
     return (
-      <LoginForm
-        onLoginSuccess={(user) => {
-          setCurrentUser(user);
-          setActiveTab(user.role === 'ADM' ? 'metrics' : 'my-clients');
-        }}
-      />
+      <>
+        <LoginForm
+          onLoginSuccess={(user) => {
+            setCurrentUser(user);
+            setActiveTab(user.role === 'ADM' ? 'metrics' : 'my-clients');
+          }}
+        />
+        <InstallAppBanner />
+      </>
     );
   }
 
@@ -424,6 +429,9 @@ export default function Home() {
           onClose={() => setPrintingClient(null)}
         />
       )}
+
+      {/* Mobile PWA Install Banner */}
+      <InstallAppBanner />
     </div>
   );
 }

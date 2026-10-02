@@ -52,22 +52,30 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col justify-center py-10 sm:py-12 sm:px-6 lg:px-8 px-4">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 to-teal-400 text-white shadow-xl shadow-cyan-500/20 mb-4">
-          <Activity className="w-9 h-9 stroke-[2.5]" />
+        {/* Official Brand Logo */}
+        <div className="inline-flex flex-col items-center mb-2">
+          <div className="w-32 sm:w-36 rounded-2xl overflow-hidden shadow-2xl shadow-orange-500/20 border-2 border-orange-500/30 bg-[#ed8431] p-1.5 mb-3 transition-transform hover:scale-105">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/linus-logo.webp"
+              alt="Logo Laboratório Linus Pauling"
+              className="w-full h-auto object-contain rounded-xl"
+            />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-sans">
+            LINUS PAULING
+          </h2>
+          <p className="mt-1 text-xs sm:text-sm text-orange-200/90 font-medium">
+            Laboratórios de Análises Clínicas
+          </p>
         </div>
-        <h2 className="text-3xl font-extrabold tracking-tight text-white">
-          Laboratório LINUS
-        </h2>
-        <p className="mt-1 text-sm text-cyan-200/80">
-          Acesso Simplificado: Usuário & Senha
-        </p>
 
         {/* Database notice badge */}
-        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-[11px] text-cyan-300 font-medium">
-          <Database className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Banco de Dados: Supabase / PostgreSQL</span>
+        <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700/80 text-[11px] text-orange-300 font-medium">
+          <Database className="w-3.5 h-3.5 text-orange-400" />
+          <span>Banco em Nuvem: Supabase / PostgreSQL</span>
         </div>
       </div>
 
@@ -123,7 +131,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 shadow-md shadow-cyan-600/20 transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#ed8431] to-[#d96a19] hover:from-[#f08c3d] hover:to-[#c85e10] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 shadow-lg shadow-orange-500/25 transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -160,16 +168,16 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
               <button
                 type="button"
                 onClick={() => fillQuick('kaique', '1234')}
-                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-teal-900 bg-teal-50 hover:bg-teal-100 rounded-lg border border-teal-200 transition-colors text-left"
+                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-orange-950 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-colors text-left"
               >
                 <div className="flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-teal-600 shrink-0" />
+                  <UserCheck className="w-4 h-4 text-orange-600 shrink-0" />
                   <div>
                     <span className="font-bold">Kaique Keven (Funcionário)</span>
-                    <span className="text-[11px] text-teal-600 block">Usuário: <strong>kaique</strong> | Senha: <strong>1234</strong></span>
+                    <span className="text-[11px] text-orange-600 block">Usuário: <strong>kaique</strong> | Senha: <strong>1234</strong></span>
                   </div>
                 </div>
-                <span className="text-[10px] bg-teal-200/80 px-2 py-0.5 rounded font-mono font-bold">Atendimento</span>
+                <span className="text-[10px] bg-orange-200/80 px-2 py-0.5 rounded font-mono font-bold text-orange-800">Atendimento</span>
               </button>
 
               <button
@@ -187,6 +195,16 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
                 <span className="text-[10px] bg-blue-200/80 px-2 py-0.5 rounded font-mono font-bold">Atendimento</span>
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* App Install Tip */}
+        <div className="mt-5 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-300 text-xs shadow-lg backdrop-blur-xs">
+            <span className="text-base">📲</span>
+            <span className="text-left text-[11px]">
+              <strong className="text-white">Dica Mobile:</strong> Adicione à tela de início para abrir como app em tela cheia!
+            </span>
           </div>
         </div>
       </div>

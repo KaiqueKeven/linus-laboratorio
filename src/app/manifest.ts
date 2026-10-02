@@ -1,0 +1,44 @@
+import type { MetadataRoute } from 'next';
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'Laboratório Linus Pauling',
+    short_name: 'Linus Pauling',
+    description: 'Laboratórios de Análises Clínicas - Sistema de Atendimento e Métricas',
+    start_url: '/',
+    id: '/',
+    display: 'standalone',
+    display_override: ['standalone', 'window-controls-overlay', 'minimal-ui'],
+    orientation: 'portrait',
+    background_color: '#ffffff',
+    theme_color: '#ed8431',
+    scope: '/',
+    lang: 'pt-BR',
+    categories: ['medical', 'health', 'business'],
+    icons: [
+      {
+        src: '/icons/icon-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-maskable-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/apple-touch-icon.png',
+        sizes: '180x180',
+        type: 'image/png',
+      },
+    ],
+  };
+}
